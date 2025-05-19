@@ -6,24 +6,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VideoDTO(
-    @SerialName("documents")
     val documents: List<VideoDocument> = listOf(),
-    @SerialName("meta")
     val meta: Meta = Meta()
 ) {
     @Serializable
     data class VideoDocument(
-        @SerialName("author")
         val author: String = "",
-        @SerialName("datetime")
         val datetime: String = "",
         @SerialName("play_time")
         val playTime: Int = 0,
-        @SerialName("thumbnail")
         val thumbnail: String = "",
-        @SerialName("title")
         val title: String = "",
-        @SerialName("url")
         val url: String = ""
     )
 
