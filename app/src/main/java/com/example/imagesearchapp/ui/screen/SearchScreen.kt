@@ -27,8 +27,12 @@ internal fun SearchScreen(
         )
 
         ImageListItem(
+            loadState = state.loadState,
             imageList = state.imageList,
-            onClickFavorite = { onEvent(ImageUiEvent.FavoriteImage(it)) }
+            isLoadMore = false,
+            onClickFavorite = { onEvent(ImageUiEvent.FavoriteImage(it)) },
+            loadMoreItem = { onEvent(ImageUiEvent.LoadMore) },
+            onRefresh = { onEvent(ImageUiEvent.Refresh) }
         )
     }
 }

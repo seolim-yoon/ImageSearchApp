@@ -3,5 +3,5 @@
     <string name="search">검색</string>
     <string name="favorite">찜</string>
     <string name="search_place_holder">검색어를 입력하세요.</string>
-
+    <string name="refresh">새로고침</string>
 </resources>
