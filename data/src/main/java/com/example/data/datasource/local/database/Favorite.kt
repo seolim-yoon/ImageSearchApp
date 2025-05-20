@@ -10,5 +10,5 @@ data class Favorite(
     @ColumnInfo(name = "favorite_id")
     var id: Int = 0,
     val thumbnail: String,
-    val datetime: Long
+    val datetime: String
 )

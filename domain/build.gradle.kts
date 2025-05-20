@@ -1,13 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.ksp)
 }
 
 android {
-    namespace = "com.example.data"
+    namespace = "com.example.domain"
     compileSdk = 34
 
     defaultConfig {
@@ -36,16 +35,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain"))
-
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.serialization.converter)
-    implementation(libs.kotlin.serialization)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.interceptor)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.room)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
 }

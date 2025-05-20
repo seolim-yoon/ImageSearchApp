@@ -15,7 +15,8 @@ import com.example.imagesearchapp.util.IMAGE_GRID
 
 @Composable
 internal fun ImageListItem(
-    imageList: List<ImageUiModel>
+    imageList: List<ImageUiModel>,
+    onClickFavorite: (ImageUiModel) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(IMAGE_GRID),
@@ -30,7 +31,8 @@ internal fun ImageListItem(
             items = imageList
         ) { image ->
             ImageItem(
-                imageUiModel = image
+                imageUiModel = image,
+                onClickFavorite = { onClickFavorite(image) }
             )
         }
     }

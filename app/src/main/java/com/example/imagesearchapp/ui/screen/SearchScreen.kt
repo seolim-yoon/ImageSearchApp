@@ -17,7 +17,6 @@ internal fun SearchScreen(
     onEvent: (ImageUiEvent) -> Unit,
     inputKeyword: String,
 ) {
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -28,7 +27,8 @@ internal fun SearchScreen(
         )
 
         ImageListItem(
-            imageList = state.imageList
+            imageList = state.imageList,
+            onClickFavorite = { onEvent(ImageUiEvent.FavoriteImage(it)) }
         )
     }
 }

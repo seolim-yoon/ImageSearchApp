@@ -10,13 +10,15 @@ interface SearchApi {
     suspend fun searchImage(
         @Query("query") keyword: String,
         @Query("page") page: Int,
-        @Query("size") pageSize: Int
+        @Query("size") pageSize: Int,
+        @Query("sort") sort: String = "recency"
     ): ImageDTO
 
     @GET("search/vclip")
     suspend fun searchVideo(
         @Query("query") keyword: String,
         @Query("page") page: Int,
-        @Query("size") pageSize: Int
+        @Query("size") pageSize: Int,
+        @Query("sort") sort: String = "recency"
     ): VideoDTO
 }

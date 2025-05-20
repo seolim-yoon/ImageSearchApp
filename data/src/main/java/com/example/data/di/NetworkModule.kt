@@ -18,7 +18,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     private const val BASE_URL = "https://dapi.kakao.com/v2/"
-    private const val REST_API_KEY = "434aed20966a501bb679a30ed4a9692d"
+    private const val REST_API_KEY = "64810c3ee55c4ea3d84ddd3ef2f85722"
     private val contentType = "application/json".toMediaType()
 
     @Singleton
@@ -61,5 +61,4 @@ object NetworkModule {
     @Provides
     fun providesSearchApi(retrofit: Retrofit): SearchApi =
         retrofit.create(SearchApi::class.java)
-
 }
