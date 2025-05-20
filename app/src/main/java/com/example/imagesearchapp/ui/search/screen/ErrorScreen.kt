@@ -1,4 +1,4 @@
-package com.example.imagesearchapp.ui.screen
+package com.example.imagesearchapp.ui.search.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

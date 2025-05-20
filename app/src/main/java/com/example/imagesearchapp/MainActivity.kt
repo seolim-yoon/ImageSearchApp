@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.imagesearchapp.ui.item.BottomNavigationItem
-import com.example.imagesearchapp.ui.screen.NavHostScreen
+import com.example.imagesearchapp.ui.common.item.BottomNavigationItem
+import com.example.imagesearchapp.ui.common.screen.NavHostScreen
 import com.example.imagesearchapp.ui.theme.ImageSearchAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,7 +26,13 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         BottomNavigationItem(
                             navigateToRoute = { route ->
-                                navController.navigate(route)
+                                navController.navigate(route) {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                }
                             }
                         )
                     },

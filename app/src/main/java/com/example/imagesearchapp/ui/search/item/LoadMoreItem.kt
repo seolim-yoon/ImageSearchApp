@@ -1,4 +1,4 @@
-package com.example.imagesearchapp.ui.item
+package com.example.imagesearchapp.ui.search.item
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

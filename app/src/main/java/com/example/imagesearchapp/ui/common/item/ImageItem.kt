@@ -1,4 +1,4 @@
-package com.example.imagesearchapp.ui.item
+package com.example.imagesearchapp.ui.common.item
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

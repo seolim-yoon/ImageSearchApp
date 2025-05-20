@@ -1,14 +1,14 @@
-package com.example.imagesearchapp.ui.screen
+package com.example.imagesearchapp.ui.search.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.imagesearchapp.ui.contract.ImageUiEvent
-import com.example.imagesearchapp.ui.contract.ImageUiState
-import com.example.imagesearchapp.ui.item.ImageListItem
-import com.example.imagesearchapp.ui.item.SearchBarItem
+import com.example.imagesearchapp.ui.search.contract.ImageUiEvent
+import com.example.imagesearchapp.ui.search.contract.ImageUiState
+import com.example.imagesearchapp.ui.search.item.SearchBarItem
+import com.example.imagesearchapp.ui.search.item.SearchResultItem
 import com.example.imagesearchapp.ui.theme.ImageSearchAppTheme
 
 @Composable
@@ -26,7 +26,7 @@ internal fun SearchScreen(
             onClickClearBtn = { onEvent(ImageUiEvent.InputKeyword("")) }
         )
 
-        ImageListItem(
+        SearchResultItem(
             loadState = state.loadState,
             imageList = state.imageList,
             isLoadMore = state.isLoadMore,

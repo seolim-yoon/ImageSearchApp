@@ -1,4 +1,4 @@
-package com.example.imagesearchapp.ui.item
+package com.example.imagesearchapp.ui.common.item
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info

@@ -1,21 +1,22 @@
-package com.example.imagesearchapp
+package com.example.imagesearchapp.ui.search
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.example.data.repository.FavoriteRepository
 import com.example.domain.usecase.GetImageListUseCase
 import com.example.imagesearchapp.base.BaseViewModel
 import com.example.imagesearchapp.base.LoadState
 import com.example.imagesearchapp.mapper.ImageUiMapper
 import com.example.imagesearchapp.model.CurrentInfo
 import com.example.imagesearchapp.model.ImageUiModel
-import com.example.imagesearchapp.ui.contract.ImageUiEffect
-import com.example.imagesearchapp.ui.contract.ImageUiEvent
-import com.example.imagesearchapp.ui.contract.ImageUiState
+import com.example.imagesearchapp.ui.search.contract.ImageUiEffect
+import com.example.imagesearchapp.ui.search.contract.ImageUiEvent
+import com.example.imagesearchapp.ui.search.contract.ImageUiState
 import com.example.imagesearchapp.util.DEFAULT_PAGE
 import com.example.imagesearchapp.util.ERROR_PAGE
 import com.example.imagesearchapp.util.PAGE_SIZE
 import com.example.imagesearchapp.util.SEARCH_TIME_DELAY
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,9 +32,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getImageListUseCase: GetImageListUseCase,
+    private val favoriteRepository: FavoriteRepository,
     private val imageUiMapper: ImageUiMapper
-) :
-    BaseViewModel<ImageUiState, ImageUiEvent, ImageUiEffect>() {
+) : BaseViewModel<ImageUiState, ImageUiEvent, ImageUiEffect>() {
     override fun createInitialState(): ImageUiState = ImageUiState()
 
     private val _currentKeywordAndPage: MutableStateFlow<CurrentInfo> =
@@ -61,8 +61,8 @@ class SearchViewModel @Inject constructor(
                 page = page,
                 pageSize = PAGE_SIZE
             ).catch { e ->
-                    handleException(e)
-                }
+                handleException(e)
+            }
         }
 
     init {
@@ -90,7 +90,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun loadMore() {
-        Log.v("seolim", "loadMore : " + isLoadingPaging)
         if (isLoadingPaging) return
 
         isLoadingPaging = true
@@ -133,16 +132,25 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun clickFavorite(imageUiModel: ImageUiModel) {
+        val updatedList = currentState.imageList.map { image ->
+            if (image.id == imageUiModel.id) {
+                image.copy(isFavorite = !image.isFavorite)
+            } else image
+        }
+
         setState {
-            copy(
-                imageList = imageList.map { image ->
-                    if (image.id == imageUiModel.id) {
-                        image.copy(
-                            isFavorite = !image.isFavorite
-                        )
-                    } else image
-                }
-            )
+            copy(imageList = updatedList)
+        }
+
+        val updatedItem = updatedList.find { it.id == imageUiModel.id } ?: return
+        val favoriteItem = imageUiMapper.mapToFavorite(updatedItem)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            if (updatedItem.isFavorite) {
+                favoriteRepository.likeItem(favoriteItem)
+            } else {
+                favoriteRepository.unLikeItem(favoriteItem)
+            }
         }
     }
 

@@ -5,11 +5,12 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteDao {
     @Query("SELECT * FROM Favorite")
-    fun getAllFavoriteItem(): Favorite
+    fun getAllFavoriteItem(): Flow<List<Favorite>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun likeItem(item: Favorite)
