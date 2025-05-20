@@ -29,7 +29,7 @@ internal fun SearchScreen(
         ImageListItem(
             loadState = state.loadState,
             imageList = state.imageList,
-            isLoadMore = false,
+            isLoadMore = state.isLoadMore,
             onClickFavorite = { onEvent(ImageUiEvent.FavoriteImage(it)) },
             loadMoreItem = { onEvent(ImageUiEvent.LoadMore) },
             onRefresh = { onEvent(ImageUiEvent.Refresh) }

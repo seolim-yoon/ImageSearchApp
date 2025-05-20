@@ -2,6 +2,7 @@ package com.example.imagesearchapp.util
 
 const val IMAGE_GRID = 2
 const val IMAGE_CONTENT_TYPE = "ImageContentType"
+const val LOAD_MORE_ITEM_TYPE = "LoadMoreItemType"
 
 const val SEARCH_TIME_DELAY = 500L
 const val PAGE_SIZE = 10
