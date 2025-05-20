@@ -3,7 +3,6 @@ package com.example.domain.usecase
 import com.example.domain.entity.ImageEntity
 import com.example.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 
 class GetImageListUseCase @Inject constructor(
@@ -14,16 +13,10 @@ class GetImageListUseCase @Inject constructor(
         page: Int,
         pageSize: Int
     ): Flow<ImageEntity> {
-        return merge(
-            searchRepository.searchImage(
-                keyword = keyword,
-                page = page,
-                pageSize = pageSize
-            ), searchRepository.searchVideo(
+        return searchRepository.searchImageAndVideo(
                 keyword = keyword,
                 page = page,
                 pageSize = pageSize
             )
-        )
     }
 }

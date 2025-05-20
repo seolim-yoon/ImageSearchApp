@@ -13,10 +13,10 @@ class ImageEntityMapper @Inject constructor() {
             dateTime = image.datetime
         )
 
-    fun mapVideoDocumentToImageEntity(image: VideoDTO.VideoDocument): ImageEntity =
+    fun mapVideoDocumentToImageEntity(video: VideoDTO.VideoDocument): ImageEntity =
         ImageEntity(
-            id = image.thumbnail + "_" + image.datetime,
-            thumbnail = image.thumbnail,
-            dateTime = image.datetime
+            id = video.thumbnail + "_" + video.datetime,
+            thumbnail = video.thumbnail,
+            dateTime = video.datetime
         )
 }

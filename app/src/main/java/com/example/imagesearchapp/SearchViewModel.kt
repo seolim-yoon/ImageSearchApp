@@ -1,5 +1,6 @@
 package com.example.imagesearchapp
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.GetImageListUseCase
 import com.example.imagesearchapp.base.BaseViewModel
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -59,8 +61,8 @@ class SearchViewModel @Inject constructor(
                 page = page,
                 pageSize = PAGE_SIZE
             ).catch { e ->
-                handleException(e)
-            }
+                    handleException(e)
+                }
         }
 
     init {
@@ -79,7 +81,7 @@ class SearchViewModel @Inject constructor(
                                 add(
                                     imageUiMapper.mapToImageUiModel(result)
                                 )
-                            }
+                            }.distinct()
                         )
                     }
                     isLoadingPaging = false
@@ -88,6 +90,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun loadMore() {
+        Log.v("seolim", "loadMore : " + isLoadingPaging)
         if (isLoadingPaging) return
 
         isLoadingPaging = true
