@@ -13,8 +13,8 @@ interface FavoriteDao {
     fun getAllFavoriteItem(): Flow<List<Favorite>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun likeItem(item: Favorite)
+    suspend fun likeItem(item: Favorite)
 
     @Delete
-    fun unLikeItem(item: Favorite)
+    suspend fun unLikeItem(item: Favorite)
 }

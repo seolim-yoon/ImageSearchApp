@@ -41,12 +41,12 @@ internal fun NavHostScreen(
         composable(
             route = BottomNavType.FAVORITE.route
         ) {
-            val viewModel: FavoriteViewModel = hiltViewModel()
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val favoriteViewModel: FavoriteViewModel = hiltViewModel()
+            val state by favoriteViewModel.state.collectAsStateWithLifecycle()
 
             FavoriteScreen(
                 state = state,
-                onEvent = viewModel::onEvent
+                onEvent = favoriteViewModel::onEvent
             )
         }
     }

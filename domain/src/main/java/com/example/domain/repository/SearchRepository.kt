@@ -4,7 +4,13 @@ import com.example.domain.entity.ImageEntity
 import kotlinx.coroutines.flow.Flow
 
 interface SearchRepository {
-    suspend fun searchImageAndVideo(
+    fun searchImage(
+        keyword: String,
+        page: Int,
+        pageSize: Int
+    ): Flow<ImageEntity>
+
+    fun searchVideo(
         keyword: String,
         page: Int,
         pageSize: Int

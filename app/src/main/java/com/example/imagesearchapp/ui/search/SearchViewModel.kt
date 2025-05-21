@@ -1,8 +1,8 @@
 package com.example.imagesearchapp.ui.search
 
 import androidx.lifecycle.viewModelScope
-import com.example.data.repository.FavoriteRepository
 import com.example.domain.usecase.GetImageListUseCase
+import com.example.domain.usecase.ToggleFavoriteUseCase
 import com.example.imagesearchapp.base.BaseViewModel
 import com.example.imagesearchapp.base.LoadState
 import com.example.imagesearchapp.mapper.ImageUiMapper
@@ -32,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getImageListUseCase: GetImageListUseCase,
-    private val favoriteRepository: FavoriteRepository,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val imageUiMapper: ImageUiMapper
 ) : BaseViewModel<ImageUiState, ImageUiEvent, ImageUiEffect>() {
     override fun createInitialState(): ImageUiState = ImageUiState()
@@ -143,14 +143,12 @@ class SearchViewModel @Inject constructor(
         }
 
         val updatedItem = updatedList.find { it.id == imageUiModel.id } ?: return
-        val favoriteItem = imageUiMapper.mapToFavorite(updatedItem)
 
         viewModelScope.launch(Dispatchers.IO) {
-            if (updatedItem.isFavorite) {
-                favoriteRepository.likeItem(favoriteItem)
-            } else {
-                favoriteRepository.unLikeItem(favoriteItem)
-            }
+            toggleFavoriteUseCase(
+                isFavorite = updatedItem.isFavorite,
+                favoriteItem = imageUiMapper.mapToFavoriteEntity(updatedItem)
+            )
         }
     }
 
@@ -179,7 +177,6 @@ class SearchViewModel @Inject constructor(
 
             is ImageUiEvent.Refresh -> {
                 refresh()
-
             }
 
             is ImageUiEvent.InputKeyword -> {

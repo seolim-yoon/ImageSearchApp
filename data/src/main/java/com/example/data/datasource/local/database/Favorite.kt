@@ -6,9 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Favorite")
 data class Favorite(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "favorite_id")
-    var id: Int = 0,
+    var id: String = "",
     val thumbnail: String,
     val datetime: String
 )

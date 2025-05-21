@@ -1,6 +1,6 @@
 package com.example.imagesearchapp.mapper
 
-import com.example.data.datasource.local.database.Favorite
+import com.example.domain.entity.FavoriteEntity
 import com.example.domain.entity.ImageEntity
 import com.example.imagesearchapp.model.ImageUiModel
 import com.example.imagesearchapp.util.dateFormatter
@@ -15,16 +15,17 @@ class ImageUiMapper @Inject constructor() {
             isFavorite = false
         )
 
-    fun mapToImageUiModel(favoriteImage: Favorite): ImageUiModel =
+    fun mapToImageUiModel(favoriteImage: FavoriteEntity): ImageUiModel =
         ImageUiModel(
-            id = favoriteImage.id.toString(),
+            id = favoriteImage.id,
             thumbnail = favoriteImage.thumbnail,
             dateTime = favoriteImage.datetime,
             isFavorite = true
         )
 
-    fun mapToFavorite(image: ImageUiModel): Favorite =
-        Favorite(
+    fun mapToFavoriteEntity(image: ImageUiModel): FavoriteEntity =
+        FavoriteEntity(
+            id = image.id,
             thumbnail = image.thumbnail,
             datetime = image.dateTime
         )
