@@ -20,7 +20,7 @@ class SearchRepositoryImpl @Inject constructor(
         pageSize: Int
     ): Flow<ImageEntity> =
         getCacheOrRemoteData(
-            cacheKey = "image-$keyword",
+            cacheKey = "image-$page-$keyword",
             getRemoteData = {
                 searchRemoteDataSource.searchImage(keyword = keyword, page = page, pageSize = pageSize).documents
             },
@@ -33,7 +33,7 @@ class SearchRepositoryImpl @Inject constructor(
         pageSize: Int
     ): Flow<ImageEntity> =
         getCacheOrRemoteData(
-            cacheKey = "video-$keyword",
+            cacheKey = "video-$page-$keyword",
             getRemoteData = {
                 searchRemoteDataSource.searchVideo(keyword = keyword, page = page, pageSize = pageSize).documents
             },

@@ -19,16 +19,12 @@ class GetImageListUseCase @Inject constructor(
             keyword = keyword,
             page = page,
             pageSize = pageSize
-        ).catch { e ->
-            e.printStackTrace()
-        }
+        )
         val videoFlow = searchRepository.searchVideo(
             keyword = keyword,
             page = page,
             pageSize = pageSize
-        ).catch { e ->
-            e.printStackTrace()
-        }
+        )
         return merge(imageFlow, videoFlow)
     }
 }
