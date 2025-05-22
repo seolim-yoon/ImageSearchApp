@@ -7,6 +7,7 @@ import com.example.domain.entity.ImageEntity
 import com.example.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okio.IOException
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
@@ -22,7 +23,11 @@ class SearchRepositoryImpl @Inject constructor(
         getCacheOrRemoteData(
             cacheKey = "image-$page-$keyword",
             getRemoteData = {
-                searchRemoteDataSource.searchImage(keyword = keyword, page = page, pageSize = pageSize).documents
+                searchRemoteDataSource.searchImage(
+                    keyword = keyword,
+                    page = page,
+                    pageSize = pageSize
+                ).documents
             },
             mapper = imageEntityMapper::mapImageDocumentToImageEntity
         )
@@ -35,7 +40,11 @@ class SearchRepositoryImpl @Inject constructor(
         getCacheOrRemoteData(
             cacheKey = "video-$page-$keyword",
             getRemoteData = {
-                searchRemoteDataSource.searchVideo(keyword = keyword, page = page, pageSize = pageSize).documents
+                    searchRemoteDataSource.searchVideo(
+                        keyword = keyword,
+                        page = page,
+                        pageSize = pageSize
+                    ).documents
             },
             mapper = imageEntityMapper::mapVideoDocumentToImageEntity
         )
@@ -47,14 +56,27 @@ class SearchRepositoryImpl @Inject constructor(
     ): Flow<ImageEntity> = flow {
         val cacheData = searchLocalDataSource.loadCacheData<T>(cacheKey)
 
-        val emitData = cacheData?.data ?: run {
-            searchLocalDataSource.saveCacheData(
-                cacheKey = cacheKey,
-                documents = getRemoteData()
-            )
-            getRemoteData()
+        val emitData: List<T> = cacheData?.data ?: run {
+            try {
+                val remoteData = getRemoteData()
+                searchLocalDataSource.saveCacheData(
+                    cacheKey = cacheKey,
+                    documents = remoteData
+                )
+                remoteData
+            } catch (e: Exception) {
+                if (e is IOException) {
+                    throw e
+                } else {
+                    emptyList()
+                }
+            }
         }
 
-        emitData.forEach { emit(mapper(it)) }
+        emitData.forEach {
+            emit(
+                mapper(it)
+            )
+        }
     }
 }
