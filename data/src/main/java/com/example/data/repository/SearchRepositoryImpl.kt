@@ -5,8 +5,6 @@ import com.example.data.datasource.remote.SearchRemoteDataSource
 import com.example.data.mapper.ImageEntityMapper
 import com.example.domain.entity.ImageEntity
 import com.example.domain.repository.SearchRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import okio.IOException
 import javax.inject.Inject
 
@@ -15,11 +13,11 @@ class SearchRepositoryImpl @Inject constructor(
     private val searchRemoteDataSource: SearchRemoteDataSource,
     private val imageEntityMapper: ImageEntityMapper
 ) : SearchRepository {
-    override fun searchImage(
+    override suspend fun searchImage(
         keyword: String,
         page: Int,
         pageSize: Int
-    ): Flow<ImageEntity> =
+    ): List<ImageEntity> =
         getCacheOrRemoteData(
             cacheKey = "image-$page-$keyword",
             getRemoteData = {
@@ -29,31 +27,31 @@ class SearchRepositoryImpl @Inject constructor(
                     pageSize = pageSize
                 ).documents
             },
-            mapper = imageEntityMapper::mapImageDocumentToImageEntity
+            mapper = imageEntityMapper::mapImageDocumentToImageEntityList
         )
 
-    override fun searchVideo(
+    override suspend fun searchVideo(
         keyword: String,
         page: Int,
         pageSize: Int
-    ): Flow<ImageEntity> =
+    ): List<ImageEntity> =
         getCacheOrRemoteData(
             cacheKey = "video-$page-$keyword",
             getRemoteData = {
-                    searchRemoteDataSource.searchVideo(
-                        keyword = keyword,
-                        page = page,
-                        pageSize = pageSize
-                    ).documents
+                searchRemoteDataSource.searchVideo(
+                    keyword = keyword,
+                    page = page,
+                    pageSize = pageSize
+                ).documents
             },
-            mapper = imageEntityMapper::mapVideoDocumentToImageEntity
+            mapper = imageEntityMapper::mapVideoDocumentToImageEntityList
         )
 
-    private fun <T> getCacheOrRemoteData(
+    private suspend fun <T> getCacheOrRemoteData(
         cacheKey: String,
         getRemoteData: suspend () -> List<T>,
-        mapper: (T) -> ImageEntity
-    ): Flow<ImageEntity> = flow {
+        mapper: (List<T>) -> List<ImageEntity>
+    ): List<ImageEntity> {
         val cacheData = searchLocalDataSource.loadCacheData<T>(cacheKey)
 
         val emitData: List<T> = cacheData?.data ?: run {
@@ -72,11 +70,6 @@ class SearchRepositoryImpl @Inject constructor(
                 }
             }
         }
-
-        emitData.forEach {
-            emit(
-                mapper(it)
-            )
-        }
+        return mapper(emitData)
     }
 }

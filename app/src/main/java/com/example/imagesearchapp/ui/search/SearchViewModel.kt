@@ -1,5 +1,6 @@
 package com.example.imagesearchapp.ui.search
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.GetImageListUseCase
 import com.example.domain.usecase.ToggleFavoriteUseCase
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,12 +43,12 @@ class SearchViewModel @Inject constructor(
         MutableStateFlow(CurrentInfo())
     val currentKeywordAndPage = _currentKeywordAndPage.asStateFlow()
 
-    private var isLoadingPaging = false
+    private var isLoadingPaging = true
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     private val searchResult = _currentKeywordAndPage
         .debounce(SEARCH_TIME_DELAY)
-        .filter { it.keyword.isNotEmpty() && it.page != ERROR_PAGE }
+        .filter { it.keyword.isNotBlank() && it.page != ERROR_PAGE }
         .flatMapLatest { (keyword, page) ->
             if (page == DEFAULT_PAGE) {
                 setState {
@@ -55,12 +57,15 @@ class SearchViewModel @Inject constructor(
                     )
                 }
             }
-
-            getImageListUseCase(
-                keyword = keyword,
-                page = page,
-                pageSize = PAGE_SIZE
-            ).catch { e ->
+            flow {
+                emit(
+                    getImageListUseCase(
+                        keyword = keyword,
+                        page = page,
+                        pageSize = PAGE_SIZE
+                    )
+                )
+            }.catch { e ->
                 handleException(e)
             }
         }
@@ -78,8 +83,8 @@ class SearchViewModel @Inject constructor(
                             loadState = LoadState.Success,
                             isLoadMore = false,
                             imageList = imageList.toMutableList().apply {
-                                add(
-                                    imageUiMapper.mapToImageUiModel(result)
+                                addAll(
+                                    imageUiMapper.mapToImageUiModelList(result)
                                 )
                             }.distinct()
                         )
@@ -90,6 +95,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun loadMore() {
+        Log.v("kakao.com", "loadMore : " + isLoadingPaging)
         if (isLoadingPaging) return
 
         isLoadingPaging = true

@@ -8,19 +8,23 @@ import com.example.domain.entity.ImageEntity
 import javax.inject.Inject
 
 class ImageEntityMapper @Inject constructor() {
-    fun mapImageDocumentToImageEntity(image: ImageDTO.ImageDocument): ImageEntity =
-        ImageEntity(
-            id = image.thumbnailUrl + "_" + image.datetime,
-            thumbnail = image.thumbnailUrl,
-            dateTime = image.datetime
-        )
+    fun mapImageDocumentToImageEntityList(imageList: List<ImageDTO.ImageDocument>): List<ImageEntity> =
+        imageList.map { image ->
+            ImageEntity(
+                id = image.thumbnailUrl + "_" + image.datetime,
+                thumbnail = image.thumbnailUrl,
+                dateTime = image.datetime
+            )
+        }
 
-    fun mapVideoDocumentToImageEntity(video: VideoDTO.VideoDocument): ImageEntity =
-        ImageEntity(
-            id = video.thumbnail + "_" + video.datetime,
-            thumbnail = video.thumbnail,
-            dateTime = video.datetime
-        )
+    fun mapVideoDocumentToImageEntityList(videoList: List<VideoDTO.VideoDocument>): List<ImageEntity> =
+        videoList.map { video ->
+            ImageEntity(
+                id = video.thumbnail + "_" + video.datetime,
+                thumbnail = video.thumbnail,
+                dateTime = video.datetime
+            )
+        }
 
     fun mapToFavoriteEntityList(favoriteList: List<Favorite>): List<FavoriteEntity> =
         favoriteList.map { favorite ->
