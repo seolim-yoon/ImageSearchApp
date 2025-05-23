@@ -1,7 +1,7 @@
 package com.example.imagesearchapp.ui.search.item
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,16 +14,14 @@ import com.example.imagesearchapp.ui.search.screen.ErrorScreen
 
 @Composable
 internal fun SearchResultItem(
+    listState: LazyStaggeredGridState,
     loadState: LoadState,
     imageList: List<ImageUiModel>,
     isLoadMore: Boolean,
-    keyword: String,
     onClickFavorite: (ImageUiModel) -> Unit,
     loadMoreItem: () -> Unit,
     onRefresh: () -> Unit
 ) {
-    val listState = rememberLazyStaggeredGridState()
-
     LaunchedEffect(listState) {
         snapshotFlow {
             listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
@@ -33,10 +31,6 @@ internal fun SearchResultItem(
                 loadMoreItem()
             }
         }
-    }
-
-    LaunchedEffect(keyword) {
-        listState.scrollToItem(0)
     }
 
     when (loadState) {

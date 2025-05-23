@@ -43,6 +43,7 @@ class SearchViewModel @Inject constructor(
     val currentKeywordAndPage = _currentKeywordAndPage.asStateFlow()
 
     private var isLoadingPaging = true
+    private var isPagingEnd = false
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     private val searchResult = _currentKeywordAndPage
@@ -83,18 +84,19 @@ class SearchViewModel @Inject constructor(
                             isLoadMore = false,
                             imageList = imageList.toMutableList().apply {
                                 addAll(
-                                    imageUiMapper.mapToImageUiModelList(result)
+                                    imageUiMapper.mapToImageUiModelList(result.imageList)
                                 )
                             }.distinct()
                         )
                     }
-                    isLoadingPaging = false
+                        isLoadingPaging = false
+                    isPagingEnd = result.isEnd
                 }
         }
     }
 
     private fun loadMore() {
-        if (isLoadingPaging) return
+        if (isLoadingPaging || isPagingEnd) return
 
         isLoadingPaging = true
 
@@ -113,6 +115,14 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun refresh() {
+        setState {
+            copy(
+                imageList = listOf()
+            )
+        }
+        setEffect {
+            ImageUiEffect.ScrollToTop
+        }
         _currentKeywordAndPage.update { (keyword, _) ->
             CurrentInfo(
                 keyword = keyword,
@@ -126,6 +136,9 @@ class SearchViewModel @Inject constructor(
             copy(
                 imageList = listOf()
             )
+        }
+        setEffect {
+            ImageUiEffect.ScrollToTop
         }
         _currentKeywordAndPage.update {
             CurrentInfo(

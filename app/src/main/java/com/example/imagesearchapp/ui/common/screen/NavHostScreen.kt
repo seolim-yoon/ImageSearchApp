@@ -34,6 +34,7 @@ internal fun NavHostScreen(
             SearchScreen(
                 state = state,
                 onEvent = viewModel::onEvent,
+                effectFlow = viewModel.effect,
                 inputKeyword = keywordAndPage.keyword
             )
         }
