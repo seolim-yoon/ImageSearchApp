@@ -5,9 +5,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import com.example.imagesearchapp.base.LoadState
 import com.example.imagesearchapp.model.ImageUiModel
@@ -25,22 +23,20 @@ internal fun SearchResultItem(
     onRefresh: () -> Unit
 ) {
     val listState = rememberLazyStaggeredGridState()
-    val needLoadMore by remember(loadState) {
-        derivedStateOf {
-            val totalItemsCount = listState.layoutInfo.totalItemsCount
-            val lastVisibleItemIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            totalItemsCount > 0 && lastVisibleItemIndex >= totalItemsCount - 2
+
+    LaunchedEffect(listState) {
+        snapshotFlow {
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+        }.collect { lastVisibleIndex ->
+            val totalCount = listState.layoutInfo.totalItemsCount
+            if (totalCount > 0 && lastVisibleIndex >= totalCount - 1) {
+                loadMoreItem()
+            }
         }
     }
 
     LaunchedEffect(keyword) {
         listState.scrollToItem(0)
-    }
-
-    LaunchedEffect(needLoadMore) {
-        if (needLoadMore) {
-            loadMoreItem()
-        }
     }
 
     when (loadState) {
