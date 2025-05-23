@@ -14,7 +14,7 @@ class ImageUiMapper @Inject constructor() {
                 type = image.type,
                 thumbnail = image.thumbnail,
                 dateTime = dateFormatter(image.dateTime),
-                isFavorite = false
+                isFavorite = image.isFavorite
             )
         }
 

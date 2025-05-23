@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.imagesearchapp.R
+import com.example.imagesearchapp.util.DEFAULT_KEYWORD
 
 @Composable
 internal fun SearchBarItem(
@@ -83,7 +84,7 @@ internal fun SearchBarItem(
 @Composable
 private fun PreviewSearchBarItem() {
     SearchBarItem(
-        inputText = "",
+        inputText = DEFAULT_KEYWORD,
         onValueChange = { },
         onClickClearBtn = { }
     )

@@ -6,5 +6,6 @@ data class ImageEntity(
     val id: String,
     val type: ImageType,
     val thumbnail: String,
-    val dateTime: String
+    val dateTime: String,
+    val isFavorite: Boolean = false
 )

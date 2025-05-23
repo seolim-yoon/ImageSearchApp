@@ -11,6 +11,8 @@ class FavoriteLocalDataSource @Inject constructor(
 ) {
     fun getAllFavoriteItem(): Flow<List<Favorite>> = favoriteDao.getAllFavoriteItem()
 
+    suspend fun getAllFavoriteItemIds(): List<String> = favoriteDao.getAllFavoriteItemIds()
+
     suspend fun likeItem(item: Favorite) = favoriteDao.likeItem(item)
 
     suspend fun unLikeItem(item: Favorite)  {

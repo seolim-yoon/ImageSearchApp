@@ -1,7 +1,6 @@
 package com.example.data.repository
 
 import com.example.data.datasource.local.FavoriteLocalDataSource
-import com.example.data.datasource.local.database.Favorite
 import com.example.data.mapper.ImageEntityMapper
 import com.example.domain.entity.FavoriteEntity
 import com.example.domain.repository.FavoriteRepository
@@ -17,6 +16,9 @@ class FavoriteRepositoryImpl @Inject constructor(
         favoriteLocalDataSource.getAllFavoriteItem().map { itemList ->
             imageEntityMapper.mapToFavoriteEntityList(itemList)
         }
+
+    override suspend fun getAllFavoriteItemIds(): List<String> =
+        favoriteLocalDataSource.getAllFavoriteItemIds()
 
     override suspend fun likeItem(item: FavoriteEntity) =
         favoriteLocalDataSource.likeItem(imageEntityMapper.mapToFavorite(item))

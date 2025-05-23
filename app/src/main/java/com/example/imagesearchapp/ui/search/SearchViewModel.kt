@@ -84,7 +84,6 @@ class SearchViewModel @Inject constructor(
                             imageList = imageList.toMutableList().apply {
                                 addAll(
                                     imageUiMapper.mapToImageUiModelList(result)
-//                                        .sortedByDescending { it.dateTime }
                                 )
                             }.distinct()
                         )

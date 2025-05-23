@@ -19,6 +19,7 @@ internal fun SearchResultItem(
     loadState: LoadState,
     imageList: List<ImageUiModel>,
     isLoadMore: Boolean,
+    keyword: String,
     onClickFavorite: (ImageUiModel) -> Unit,
     loadMoreItem: () -> Unit,
     onRefresh: () -> Unit
@@ -28,8 +29,12 @@ internal fun SearchResultItem(
         derivedStateOf {
             val totalItemsCount = listState.layoutInfo.totalItemsCount
             val lastVisibleItemIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            totalItemsCount > 0 && lastVisibleItemIndex >= totalItemsCount - 1
+            totalItemsCount > 0 && lastVisibleItemIndex >= totalItemsCount - 2
         }
+    }
+
+    LaunchedEffect(keyword) {
+        listState.scrollToItem(0)
     }
 
     LaunchedEffect(needLoadMore) {

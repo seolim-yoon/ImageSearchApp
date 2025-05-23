@@ -1,6 +1,7 @@
 package com.example.domain.usecase
 
 import com.example.domain.entity.ImageEntity
+import com.example.domain.repository.FavoriteRepository
 import com.example.domain.repository.SearchRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -8,7 +9,8 @@ import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 class GetImageListUseCase @Inject constructor(
-    private val searchRepository: SearchRepository
+    private val searchRepository: SearchRepository,
+    private val favoriteRepository: FavoriteRepository
 ) {
     suspend operator fun invoke(
         keyword: String,
@@ -16,21 +18,34 @@ class GetImageListUseCase @Inject constructor(
         pageSize: Int
     ): List<ImageEntity> =
         coroutineScope {
-            val imageList = async {
+            val imageDeferred = async {
                 searchRepository.searchImage(
                     keyword = keyword,
                     page = page,
                     pageSize = pageSize
                 )
             }
-            val videoList = async {
+            val videoDeferred = async {
                 searchRepository.searchVideo(
                     keyword = keyword,
                     page = page,
                     pageSize = pageSize
                 )
             }
-            val (images, videos) = awaitAll(imageList, videoList)
-            return@coroutineScope images + videos
+
+            val favoriteIdDeferred = async {
+                favoriteRepository.getAllFavoriteItemIds()
+            }
+
+            val (images, videos) = awaitAll(imageDeferred, videoDeferred)
+            val favoriteIds = favoriteIdDeferred.await()
+
+            return@coroutineScope (images + videos)
+                .sortedByDescending { it.dateTime }
+                .map { entity ->
+                    entity.copy(
+                        isFavorite = favoriteIds.contains(entity.id)
+                    )
+                }
         }
 }

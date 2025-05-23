@@ -10,6 +10,7 @@ import com.example.imagesearchapp.ui.search.contract.ImageUiState
 import com.example.imagesearchapp.ui.search.item.SearchBarItem
 import com.example.imagesearchapp.ui.search.item.SearchResultItem
 import com.example.imagesearchapp.ui.theme.ImageSearchAppTheme
+import com.example.imagesearchapp.util.DEFAULT_KEYWORD
 
 @Composable
 internal fun SearchScreen(
@@ -23,13 +24,14 @@ internal fun SearchScreen(
         SearchBarItem(
             inputText = inputKeyword,
             onValueChange = { keyword -> onEvent(ImageUiEvent.InputKeyword(keyword)) },
-            onClickClearBtn = { onEvent(ImageUiEvent.InputKeyword("")) }
+            onClickClearBtn = { onEvent(ImageUiEvent.InputKeyword(DEFAULT_KEYWORD)) }
         )
 
         SearchResultItem(
             loadState = state.loadState,
             imageList = state.imageList,
             isLoadMore = state.isLoadMore,
+            keyword = inputKeyword,
             onClickFavorite = { onEvent(ImageUiEvent.FavoriteImage(it)) },
             loadMoreItem = { onEvent(ImageUiEvent.LoadMore) },
             onRefresh = { onEvent(ImageUiEvent.Refresh) }
@@ -45,7 +47,7 @@ private fun PreviewSearchScreen() {
         SearchScreen(
             state = ImageUiState(),
             onEvent = {},
-            inputKeyword = ""
+            inputKeyword = DEFAULT_KEYWORD
         )
     }
 }
