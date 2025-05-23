@@ -9,6 +9,7 @@ data class Favorite(
     @PrimaryKey
     @ColumnInfo(name = "favorite_id")
     var id: String = "",
+    val type: String,
     val thumbnail: String,
     val datetime: String
 )

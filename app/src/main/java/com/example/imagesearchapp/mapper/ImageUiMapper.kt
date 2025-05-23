@@ -11,6 +11,7 @@ class ImageUiMapper @Inject constructor() {
         imageList.map { image ->
             ImageUiModel(
                 id = image.thumbnail + "_" + image.dateTime,
+                type = image.type,
                 thumbnail = image.thumbnail,
                 dateTime = dateFormatter(image.dateTime),
                 isFavorite = false
@@ -20,6 +21,7 @@ class ImageUiMapper @Inject constructor() {
     fun mapToImageUiModel(favoriteImage: FavoriteEntity): ImageUiModel =
         ImageUiModel(
             id = favoriteImage.id,
+            type = favoriteImage.type,
             thumbnail = favoriteImage.thumbnail,
             dateTime = favoriteImage.datetime,
             isFavorite = true
@@ -28,6 +30,7 @@ class ImageUiMapper @Inject constructor() {
     fun mapToFavoriteEntity(image: ImageUiModel): FavoriteEntity =
         FavoriteEntity(
             id = image.id,
+            type = image.type,
             thumbnail = image.thumbnail,
             datetime = image.dateTime
         )

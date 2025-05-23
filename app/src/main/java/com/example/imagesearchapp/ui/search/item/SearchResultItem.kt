@@ -1,6 +1,5 @@
 package com.example.imagesearchapp.ui.search.item
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.LinearProgressIndicator
@@ -25,13 +24,11 @@ internal fun SearchResultItem(
     onRefresh: () -> Unit
 ) {
     val listState = rememberLazyStaggeredGridState()
-    val needLoadMore by remember {
+    val needLoadMore by remember(loadState) {
         derivedStateOf {
             val totalItemsCount = listState.layoutInfo.totalItemsCount
             val lastVisibleItemIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            Log.v("kakao.com", "totalItemsCount : " + totalItemsCount)
-            Log.v("kakao.com", "lastVisibleItemIndex : " + lastVisibleItemIndex)
-            lastVisibleItemIndex != 0 && lastVisibleItemIndex >= totalItemsCount - 2
+            totalItemsCount > 0 && lastVisibleItemIndex >= totalItemsCount - 1
         }
     }
 

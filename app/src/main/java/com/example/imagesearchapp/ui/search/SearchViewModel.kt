@@ -1,6 +1,5 @@
 package com.example.imagesearchapp.ui.search
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.GetImageListUseCase
 import com.example.domain.usecase.ToggleFavoriteUseCase
@@ -85,6 +84,7 @@ class SearchViewModel @Inject constructor(
                             imageList = imageList.toMutableList().apply {
                                 addAll(
                                     imageUiMapper.mapToImageUiModelList(result)
+//                                        .sortedByDescending { it.dateTime }
                                 )
                             }.distinct()
                         )
@@ -95,7 +95,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun loadMore() {
-        Log.v("kakao.com", "loadMore : " + isLoadingPaging)
         if (isLoadingPaging) return
 
         isLoadingPaging = true

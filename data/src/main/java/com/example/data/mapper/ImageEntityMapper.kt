@@ -5,6 +5,7 @@ import com.example.data.dto.ImageDTO
 import com.example.data.dto.VideoDTO
 import com.example.domain.entity.FavoriteEntity
 import com.example.domain.entity.ImageEntity
+import com.example.domain.util.ImageType
 import javax.inject.Inject
 
 class ImageEntityMapper @Inject constructor() {
@@ -12,6 +13,7 @@ class ImageEntityMapper @Inject constructor() {
         imageList.map { image ->
             ImageEntity(
                 id = image.thumbnailUrl + "_" + image.datetime,
+                type = ImageType.IMAGE,
                 thumbnail = image.thumbnailUrl,
                 dateTime = image.datetime
             )
@@ -21,6 +23,7 @@ class ImageEntityMapper @Inject constructor() {
         videoList.map { video ->
             ImageEntity(
                 id = video.thumbnail + "_" + video.datetime,
+                type = ImageType.VIDEO,
                 thumbnail = video.thumbnail,
                 dateTime = video.datetime
             )
@@ -30,6 +33,7 @@ class ImageEntityMapper @Inject constructor() {
         favoriteList.map { favorite ->
             FavoriteEntity(
                 id = favorite.id,
+                type = ImageType.fromValue(favorite.type),
                 thumbnail = favorite.thumbnail,
                 datetime = favorite.datetime
             )
@@ -38,6 +42,7 @@ class ImageEntityMapper @Inject constructor() {
     fun mapToFavorite(favorite: FavoriteEntity): Favorite =
         Favorite(
             id = favorite.id,
+            type = favorite.type.name,
             thumbnail = favorite.thumbnail,
             datetime = favorite.datetime
         )

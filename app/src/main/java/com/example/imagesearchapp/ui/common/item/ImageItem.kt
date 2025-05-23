@@ -3,6 +3,7 @@ package com.example.imagesearchapp.ui.common.item
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.domain.util.ImageType
 import com.example.imagesearchapp.model.ImageUiModel
 import com.example.imagesearchapp.ui.theme.ImageSearchAppTheme
 import java.time.LocalDateTime
@@ -31,6 +33,12 @@ internal fun ImageItem(
             imgUrl = imageUiModel.thumbnail,
             modifier = Modifier
                 .fillMaxWidth()
+                .aspectRatio(
+                    when (imageUiModel.type) {
+                        ImageType.IMAGE -> 1f
+                        ImageType.VIDEO -> 2f
+                    }
+                )
                 .clickable {
                     onClickFavorite()
                 }
@@ -65,6 +73,7 @@ private fun PreviewSearchScreen() {
         ImageItem(
             imageUiModel = ImageUiModel(
                 id = "",
+                type = ImageType.IMAGE,
                 thumbnail = "",
                 dateTime = LocalDateTime.now().toString(),
                 isFavorite = false
