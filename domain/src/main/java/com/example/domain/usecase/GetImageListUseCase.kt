@@ -40,7 +40,7 @@ class GetImageListUseCase @Inject constructor(
             val (images, videos) = awaitAll(imageDeferred, videoDeferred)
             val favoriteIds = favoriteIdDeferred.await()
 
-            val totalImageList = images.imageList + videos.imageList
+            val totalImageList = (images.imageList + videos.imageList)
                 .sortedByDescending { it.dateTime }
                 .map { entity ->
                     entity.copy(
